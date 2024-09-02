@@ -541,6 +541,7 @@ Here's how you should help me with scheduling.
 If you have new email and it's about scheduling, read the whole thread.
 
 (1a) If it's a new meeting, check my calendar availability according to the context in that email. Try to check at a range of at least 1 week, not just 2 days, unless the context requires it.
+Weeks start on Monday.
 
 (1b) If a schedule has already been proposed, first check my availability and if I'm free proceed directly to step 3 without proposing new times unless needed.
 If someone proposed times to meet, bear in mind their timezone when checking my availability! If you don't know, ask for clarification. (eg: if someone replies "what about tomorrow 4pm" and you have no information about their timezone, you should ask.)
@@ -548,6 +549,7 @@ If someone proposed times to meet, bear in mind their timezone when checking my 
 (2) Then, propose a schedule by replying directly to the email thread.
 Only propose a meeting schedule if no option that works for everytone has already been sent (otherwise go to 3).
 Only send 1 to 3 options, don't reveal my whole availability.
+Try to make the options varied (eg: some in the morning, some in the afternoon).
 The message should be professional but as short as possible.
 When replying, always include all participants from the original email thread (To and CC fields) to ensure everyone is kept in the loop.
 My current timezone is {SECRETS['user_timezone']}. 
