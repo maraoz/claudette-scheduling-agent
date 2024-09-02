@@ -1,15 +1,17 @@
 # claudette-scheduling-agent
 
-An AI-powered scheduling assistant that automates email responses and calendar management using Anthropic's Claude API.
+A Claude-based scheduling assistant that automates email responses and calendar management using Anthropic's API.
 
 ## Overview
 
-claudette-scheduling-agent is a Python-based tool that acts as a personal scheduling assistant. It integrates with your Gmail inbox and calendar to automatically handle meeting requests, propose suitable meeting times, and create calendar invites.
+claudette-scheduling-agent acts as a personal scheduling assistant.
+It integrates with your inbox and calendar to automatically handle meeting requests, propose suitable meeting times, and create calendar invites.
 
 Key features:
+- Just add your bot to an email thread to begin (you'll need to create a new Gmail account)
 - Reads and processes emails related to scheduling
 - Checks calendar availability
-- Proposes meeting times based on availability and context
+- Proposes meeting times based on context
 - Creates calendar invites
 - Handles email responses professionally
 
