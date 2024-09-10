@@ -129,7 +129,7 @@ def get_credentials(token_file: str, scopes: list):
       else:
         raise EnvironmentError("Cannot perform interactive authentication. "
                                "Please run this script on a machine with a display first "
-                               "to generate the token file.")
+                               f"to generate the {token_file} file. Then copy the file to this headless environment.")
     
     # Save the credentials for the next run
     with open(token_file, 'w') as token:
