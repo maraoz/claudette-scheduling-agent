@@ -91,38 +91,58 @@ def notify_owner(
   except requests.exceptions.RequestException as e:
     print(f"An error occurred: {e}")
 
+
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.exceptions import RefreshError
 import os
+import sys
 from datetime import datetime
+
+def can_launch_browser():
+  if sys.platform.startswith('linux'):
+    return 'DISPLAY' in os.environ or 'WAYLAND_DISPLAY' in os.environ
+  elif sys.platform == 'darwin':
+    return True  # macOS should always be able to launch a browser
+  elif sys.platform == 'win32':
+    return True  # Windows should always be able to launch a browser
+  return False
+
+def get_credentials(token_file: str, scopes: list):
+  creds = None
+  if os.path.exists(token_file):
+    creds = Credentials.from_authorized_user_file(token_file, scopes)
+  
+  if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+      try:
+        creds.refresh(Request())
+      except RefreshError:
+        creds = None
+    
+    if not creds:
+      if can_launch_browser():
+        flow = InstalledAppFlow.from_client_secrets_file('credentials.json', scopes)
+        creds = flow.run_local_server(port=0)
+      else:
+        raise EnvironmentError("Cannot perform interactive authentication. "
+                               "Please run this script on a machine with a display first "
+                               "to generate the token file.")
+    
+    # Save the credentials for the next run
+    with open(token_file, 'w') as token:
+      token.write(creds.to_json())
+  
+  return creds
 
 CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 def get_calendar_service():
-    creds = None
-    if os.path.exists('token_calendar.json'):
-        creds = Credentials.from_authorized_user_file('token_calendar.json', CALENDAR_SCOPES)
-    
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                creds.refresh(Request())
-            except:
-                # If refresh fails, force a new authentication
-                flow = InstalledAppFlow.from_client_secrets_file('credentials.json', CALENDAR_SCOPES)
-                creds = flow.run_local_server(port=0)
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', CALENDAR_SCOPES)
-            creds = flow.run_local_server(port=0)
-        
-        # Save the credentials for the next run
-        with open('token_calendar.json', 'w') as token:
-            token.write(creds.to_json())
-
-    return build('calendar', 'v3', credentials=creds)
+  CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
+  creds = get_credentials('token_calendar.json', CALENDAR_SCOPES)
+  return build('calendar', 'v3', credentials=creds)
 
 @debug_print
 def check_calendar_availability(
@@ -179,28 +199,9 @@ import re
 GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.modify']  # Changed to allow marking emails as read
 
 def get_gmail_service():
-    creds = None
-    if os.path.exists('token_gmail.json'):
-        creds = Credentials.from_authorized_user_file('token_gmail.json', GMAIL_SCOPES)
-    
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                creds.refresh(Request())
-            except:
-                # If refresh fails, force a new authentication
-                flow = InstalledAppFlow.from_client_secrets_file('credentials.json', GMAIL_SCOPES)
-                creds = flow.run_local_server(port=0)
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', GMAIL_SCOPES)
-            creds = flow.run_local_server(port=0)
-        
-        # Save the credentials for the next run
-        with open('token_gmail.json', 'w') as token:
-            token.write(creds.to_json())
-
-    return build('gmail', 'v1', credentials=creds)
+  GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
+  creds = get_credentials('token_gmail.json', GMAIL_SCOPES)
+  return build('gmail', 'v1', credentials=creds)
 
 def get_unread_count() -> int:
   service = get_gmail_service()
@@ -464,7 +465,7 @@ def create_calendar_invite(
     return f"An error occurred while creating the calendar invite: {str(e)}"
 #print(create_calendar_invite('programmatic event, delete', '2024-06-25T14:00:00', '2024-06-25T15:00:00', ['youremail@gmail.com'], 'Asia/Shanghai'))
 
-from playwright.sync_api import sync_playwright
+#from playwright.sync_api import sync_playwright
 import textwrap
 
 def execute_web_action(playwright_code: str) -> str:

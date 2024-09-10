@@ -4,3 +4,4 @@ secrets.json
 token_calendar.json
 token_gmail.json
 manubot.log
+.venv/
