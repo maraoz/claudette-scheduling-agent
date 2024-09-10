@@ -41,7 +41,7 @@ Key features:
       - Go to the [Google Cloud Console](https://console.cloud.google.com/)
       - Create a new project
       - Enable the Google Calendar API
-      - Create credentials (OAuth 2.0 Client ID)
+      - Create credentials (OAuth 2.0 Client ID) and save as `credentials.json` in project folder
       - Add your **personal gmail** as a test user.
       - First time you run `main.py` you'll be prompted to connect your go
 
