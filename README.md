@@ -89,7 +89,22 @@ The agent will then:
 
 ## Configuration
 
-Adjust the `main_prompt` in the script and `secrets.json` to customize the behavior of the scheduling agent. You can modify timezone settings, scheduling preferences, and email response styles.
+Adjust the `main_prompt` in the script and `secrets.json` to customize the behavior of the scheduling agent.
+You can modify timezone settings, scheduling preferences, and email response styles.
+
+If you're running in a headless environment, first run this on another host with a web browser:
+```
+python3 refresh.py
+```
+This will open an authentication page for each token (Gmail, Calendar).
+Check the console messages to know which account you need to authorize each time.
+(ie: Gmail -> your bot's new gmail account, Calendar -> your personal gmail account)
+
+Then copy the newly generated tokens to your headless server, eg:
+```
+scp token_*.json your_user@your_server:/home/your_user/claudette-scheduling-agent
+```
+Then run the scheduling agent on your headless environment.
 
 ## Contributing
 
