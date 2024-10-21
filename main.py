@@ -562,6 +562,7 @@ Never create a calendar invite without checking my availability first!
 Be careful to use the exact time that has been agreed.
 The meeting name should be "$OWNER_NAME <> $OTHER_NAME" for two people meetings.
 If more than 2 people are involved, pick a relevant meeting name according to context.
+Default to 45' meeting time if not specified.
 
 (4) Finally, mark the received email as read on your inbox to prevent double-processing.
 
